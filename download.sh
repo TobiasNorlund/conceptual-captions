@@ -17,7 +17,7 @@ mkdir -p $2
 
 # Download
 NUM_PROCESSES=$(expr $(grep -c ^processor /proc/cpuinfo) \* 4)
-cat $1 | cut -d'	' -f2 | parallel -j $NUM_PROCESSES --joblog joblog --bar --resume --resume-failed wget2 --tries 2 -T 5 -O $OUTPUT_DIR{#} -o /dev/null -A jpeg,jpg,bmp,gif,png {}
+cat $1 | cut -d'	' -f2 | parallel -j $NUM_PROCESSES --progress --joblog joblog --resume --resume-failed curl --max-time 10 --silent --output $OUTPUT_DIR{#} {}
 
 # Remove non-image files
 FAILED_DOWNLOADS_COUNT=$(find $OUTPUT_DIR -type f | xargs file | grep -v image | cut -d: -f1 | wc -l)
